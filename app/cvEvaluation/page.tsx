@@ -25,8 +25,8 @@ export default function Home() {
       </nav>
 
       {/* Page Content */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 ">
+        {/* <div className=""> */}
           {/* <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4 text-balance">
               CV Uploader
@@ -37,17 +37,17 @@ export default function Home() {
           </div> */}
 
           <CVUploader />
-        </div>
+        {/* </div> */}
       </div>
 
       {/* Footer */}
-      <div className="border-t border-slate-800 mt-20">
+      {/* <div className="border-t border-slate-800 mt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-center text-sm text-slate-500">
             Powered by n8n automation workflows and Google Sheets integration
           </p>
         </div>
-      </div>
+      </div> */}
     </main>
   )
 }

@@ -167,12 +167,12 @@ function HomePage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-60 border-b border-slate-800 bg-[#020617]/80 backdrop-blur-md">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <Zap className="h-6 w-6 text-white" />
+          <div className="flex h-14 items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <Zap className="h-5 w-5 text-white" />
               </div>
-              <span className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white to-slate-400">
+              <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white to-slate-400">
                 Rumsan Automations
               </span>
             </div>

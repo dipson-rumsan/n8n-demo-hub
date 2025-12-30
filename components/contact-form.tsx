@@ -9,10 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { CalendarClock, User, Building2, UserCheck, Calendar, FileText, CheckCircle2, Loader2 } from "lucide-react"
+import { CalendarClock, User, Building2, UserCheck, Calendar, FileText, CheckCircle2, Loader2, Mail } from "lucide-react"
 
 export function SickLeaveForm() {
   const [employeeName, setEmployeeName] = useState("")
+  const [email, setEmail] = useState("")
   const [department, setDepartment] = useState("")
   const [manager, setManager] = useState("")
   const [startDate, setStartDate] = useState("")
@@ -20,11 +21,13 @@ export function SickLeaveForm() {
   const [reason, setReason] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [webhookResponse, setWebhookResponse] = useState("")
   const { toast } = useToast()
+  const today = new Date().toISOString().split('T')[0]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!employeeName.trim() || !department.trim() || !manager || !startDate || !endDate || !reason.trim()) {
+    if (!employeeName.trim() || !email.trim() || !department.trim() || !manager || !startDate || !endDate || !reason.trim()) {
       toast({ title: "Error", description: "All fields are required.", variant: "destructive" })
       return
     }
@@ -35,20 +38,51 @@ export function SickLeaveForm() {
 
     setIsSubmitting(true)
     try {
-      const formData = { employeeName, department, manager, startDate, endDate, reason, submittedAt: new Date().toISOString() }
-      const response = await fetch("https://n8n-webhook.rumsan.net/webhook/sick-leave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+      const formData = { employeeName, email, department, manager, startDate, endDate, reason, submittedAt: new Date().toISOString() }
+      const response = await fetch(
+        "https://n8n-webhook.rumsan.net/webhook/sick-leave",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      let message = "Your sick leave request has been submitted and will be reviewed by your manager."
+      
+      try {
+        const contentType = response.headers.get("content-type")
+        if (contentType && contentType.includes("application/json")) {
+          const responseData = await response.json()
+          message = responseData?.message || message
+        } else {
+          // Response is not JSON, try to read as text
+          const textResponse = await response.text()
+          if (textResponse && textResponse.trim()) {
+            message = textResponse
+          }
+        }
+      } catch (parseError) {
+        // Ignore parsing errors, use default message
+        console.log("Using default message due to response parsing issue")
+      }
+      
+      setWebhookResponse(message)
       setIsSubmitted(true)
+      
       setTimeout(() => {
-        setEmployeeName(""); setDepartment(""); setManager(""); setStartDate(""); setEndDate(""); setReason(""); setIsSubmitted(false)
+        setEmployeeName(""); setEmail(""); setDepartment(""); setManager(""); setStartDate(""); setEndDate(""); setReason(""); setIsSubmitted(false); setWebhookResponse("")
       }, 5000)
     } catch (error) {
+      console.error("Submission error:", error)
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" })
-    } finally { setIsSubmitting(false) }
+    } finally { 
+      setIsSubmitting(false) 
+    }
   }
 
   if (isSubmitted) {
@@ -60,7 +94,7 @@ export function SickLeaveForm() {
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-white text-center">Request Submitted Successfully!</h2>
           <p className="text-sm md:text-base text-slate-400 text-center">
-            Your sick leave request has been submitted and will be reviewed by your manager.
+            {webhookResponse || "Your sick leave request has been submitted and will be reviewed by your manager."}
           </p>
           <div className="flex items-center justify-center gap-2 text-xs md:text-sm text-slate-500">
             <Loader2 className="w-4 h-4 animate-spin" /> Returning to form...
@@ -98,6 +132,15 @@ export function SickLeaveForm() {
               className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20" required />
           </div>
 
+          {/* Email */}
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-slate-300 flex items-center gap-1 text-xs md:text-sm font-medium">
+              <Mail className="w-3 h-3 md:w-4 md:h-4 text-slate-500" /> Email *
+            </Label>
+            <Input id="email" type="email" placeholder="email@example.com" value={email} onChange={(e) => setEmail(e.target.value)}
+              className="bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500 h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20" required />
+          </div>
+
           {/* Department */}
           <div className="space-y-2">
             <Label htmlFor="department" className="text-slate-300 flex items-center gap-1 text-xs md:text-sm font-medium">
@@ -113,12 +156,12 @@ export function SickLeaveForm() {
               <UserCheck className="w-3 h-3 md:w-4 md:h-4 text-slate-500" /> Manager *
             </Label>
             <Select value={manager} onValueChange={setManager} required>
-              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-white h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20">
+              <SelectTrigger className="w-full bg-slate-900/50 border-slate-700 text-white h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20">
                 <SelectValue placeholder="Select manager" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-900 border-slate-700">
-                <SelectItem value="Raktim Shrestha" className="text-white focus:bg-slate-800">Raktim Shrestha</SelectItem>
-                <SelectItem value="Manzik Shrestha" className="text-white focus:bg-slate-800">Manzik Shrestha</SelectItem>
+              <SelectContent className="z-100 bg-slate-800 border-slate-700">
+                <SelectItem value="Raktim Shrestha" className="text-white hover:bg-slate-700 focus:bg-slate-700 cursor-pointer">Raktim Shrestha</SelectItem>
+                <SelectItem value="Manzik Shrestha" className="text-white hover:bg-slate-700 focus:bg-slate-700 cursor-pointer">Manzik Shrestha</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -128,8 +171,8 @@ export function SickLeaveForm() {
             <Label htmlFor="startDate" className="text-slate-300 flex items-center gap-1 text-xs md:text-sm font-medium">
               <Calendar className="w-3 h-3 md:w-4 md:h-4 text-slate-500" /> Start Date *
             </Label>
-            <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
-              className="bg-slate-900/50 border-slate-700 text-white h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20" required />
+            <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} min={today}
+              className="bg-slate-900/50 border-slate-700 text-white h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20 scheme-dark" required />
           </div>
 
           {/* End Date */}
@@ -137,8 +180,8 @@ export function SickLeaveForm() {
             <Label htmlFor="endDate" className="text-slate-300 flex items-center gap-1 text-xs md:text-sm font-medium">
               <Calendar className="w-3 h-3 md:w-4 md:h-4 text-slate-500" /> End Date *
             </Label>
-            <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}
-              className="bg-slate-900/50 border-slate-700 text-white h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20" required />
+            <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} min={startDate || today}
+              className="bg-slate-900/50 border-slate-700 text-white h-9 md:h-10 focus:border-purple-500 focus:ring-purple-500/20 scheme-dark" required />
           </div>
 
           {/* Reason (spans two columns) */}
