@@ -42,9 +42,6 @@ export async function POST(request: NextRequest) {
     // 2. Send the ticket data to your n8n webhook
     // 3. Store ticket metadata in a database
 
-    // For now, we'll simulate the n8n webhook call
-    console.log("[v0] Ticket submitted:", ticketData)
-
     // Simulate n8n webhook response
     const n8nResponse = {
       success: true,
@@ -60,7 +57,7 @@ export async function POST(request: NextRequest) {
       n8nResponse,
     })
   } catch (error) {
-    console.error("[v0] Error submitting ticket:", error)
+    console.error("Error submitting ticket:", error)
     return NextResponse.json({ success: false, error: "Failed to submit ticket" }, { status: 500 })
   }
 }
