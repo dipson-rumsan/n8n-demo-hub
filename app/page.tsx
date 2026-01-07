@@ -22,10 +22,23 @@ import {
   Target,
   Package,
   MessageSquare,
+  MessageCircle,
+  Clock,
 } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react"
 import React from "react"
+
+const DiscordIcon = ({ className }: { className?: string }) => (
+  <svg 
+    className={className}
+    viewBox="0 0 24 24" 
+    fill="currentColor" 
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0189 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"/>
+  </svg>
+)
 
 const WorkflowIcon = ({ icon: Icon, colorClass }: { icon: any; colorClass: string }) => (
   <div className={`h-12 w-12 rounded-xl border flex items-center justify-center ${colorClass}`}>
@@ -54,13 +67,16 @@ function HomePage() {
     {
       id: "askbhunte",
       icon: Facebook,
-      iconColor: "text-green-500 border-green-500/20 bg-green-500/5",
+      iconColor: "text-blue-500 border-blue-500/20 bg-blue-500/5",
       badge: "Real-time AI",
       title: "AskBhunte AI Chatbot",
-      shortDescription: "Your all-in-one Facebook AI assistant for real-time market updates, loans, and news.",
+      shortDescription:
+        "Your all-in-one Facebook AI assistant for real-time market updates, loans, and news.",
       fullDescription:
         "AskBhunte is a multimodal AI assistant integrated with Facebook Messenger. It delivers real-time updates on Forex, Stocks, Gold/Silver prices, Nepalese bank loan rates, and the latest news from The Kathmandu Post — all in one conversational interface.",
-      workflowUrl: process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/askbhunte",
+      workflowUrl:
+        process.env.NEXT_PUBLIC_FACEBOOK_URL ||
+        "https://www.facebook.com/askbhunte",
       problems: [
         "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
         "Manually checking loan rates from multiple Nepali banks is inefficient.",
@@ -83,15 +99,35 @@ function HomePage() {
       iconColor: "text-blue-500 border-blue-500/20 bg-blue-500/5",
       badge: "AI-Powered",
       title: "CV Evaluation & Scoring",
-      shortDescription: "AI-powered resume analysis and intelligent candidate evaluation with instant reports.",
-      fullDescription: "Automatically evaluate CVs using AI. Extract information, score candidates, and generate detailed reports.",
+      shortDescription:
+        "AI-powered resume analysis and intelligent candidate evaluation with instant reports.",
+      fullDescription:
+        "Automatically evaluate CVs using AI. Extract information, score candidates, and generate detailed reports.",
       workflowUrl: "/cvEvaluation",
       isInternalRoute: true,
       steps: [
-        { icon: CheckCircle2, title: "Select Job Position", description: "Choose the job role and requirements for candidate evaluation." },
-        { icon: FileText, title: "Upload Resumes", description: "Securely upload CVs through the portal." },
-        { icon: Zap, title: "AI Evaluation", description: "Automatically assess skills, experience, and match to job requirements." },
-        { icon: Mail, title: "Generate Reports", description: "Create detailed scorecards for each candidate." },
+        {
+          icon: CheckCircle2,
+          title: "Select Job Position",
+          description:
+            "Choose the job role and requirements for candidate evaluation.",
+        },
+        {
+          icon: FileText,
+          title: "Upload Resumes",
+          description: "Securely upload CVs through the portal.",
+        },
+        {
+          icon: Zap,
+          title: "AI Evaluation",
+          description:
+            "Automatically assess skills, experience, and match to job requirements.",
+        },
+        {
+          icon: Mail,
+          title: "Generate Reports",
+          description: "Create detailed scorecards for each candidate.",
+        },
       ],
       problems: [
         "Manual resume screening consumes excessive recruiter time",
@@ -117,24 +153,41 @@ function HomePage() {
       iconColor: "text-purple-500 border-purple-500/20 bg-purple-500/5",
       badge: "HR Automation",
       title: "Sick Leave Management",
-      shortDescription: "Automated leave request processing with Google Sheets sync and duplicate detection.",
+      shortDescription:
+        "Automated leave request processing with Google Sheets sync and duplicate detection.",
       fullDescription:
         "Manage employee sick leave requests automatically. Validates duplicates, formats data, and archives entries in Google Sheets.",
       image: "/images/image.png",
       workflowUrl: "/sickLeave",
       isInternalRoute: true,
       steps: [
-        { icon: FileText, title: "Form Submission", description: "Receive leave requests from employees via a web form." },
-        { icon: Sheet, title: "Check Duplicates", description: "Verify if the leave request already exists in the sheet." },
-        { icon: Code, title: "Process Request", description: "Format and validate data for proper record-keeping." },
-        { icon: GitBranch, title: "Update Sheet", description: "Append validated requests to the master Google Sheet." },
+        {
+          icon: FileText,
+          title: "Form Submission",
+          description: "Receive leave requests from employees via a web form.",
+        },
+        {
+          icon: Sheet,
+          title: "Check Duplicates",
+          description:
+            "Verify if the leave request already exists in the sheet.",
+        },
+        {
+          icon: Code,
+          title: "Process Request",
+          description: "Format and validate data for proper record-keeping.",
+        },
+        {
+          icon: GitBranch,
+          title: "Update Sheet",
+          description: "Append validated requests to the master Google Sheet.",
+        },
       ],
       problems: [
         "Manual leave tracking is error-prone",
         "Duplicate entries cause confusion",
         "Managers spend too much time verifying requests",
         "Employees face delays in approval notifications",
-
       ],
       useCases: [
         "HR teams automating employee leave management",
@@ -150,17 +203,38 @@ function HomePage() {
       iconColor: "text-orange-500 border-orange-500/20 bg-orange-500/5",
       badge: "Finance Bot",
       title: "Invoice Validation Portal",
-      shortDescription: "Automated invoice processing, data extraction, and cross-department validation.",
+      shortDescription:
+        "Automated invoice processing, data extraction, and cross-department validation.",
       fullDescription:
         "Streamline invoice validation with automated extraction, notifications, and archiving.",
       image: "/invoice-validation-workflow.png",
       workflowUrl: "/invoiceValidation",
       isInternalRoute: true,
       steps: [
-        { icon: FileText, title: "Upload Invoice", description: "Upload purchase receipt for warranty verification and product validation." },
-        { icon: Package, title: "Select Products", description: "Choose affected products and specify support type (warranty claim, troubleshooting, etc.)." },
-        { icon: MessageSquare, title: "Describe Issue", description: "Provide detailed description of the problem and desired resolution." },
-        { icon: Mail, title: "Submit & Notify", description: "Submit claim and receive email confirmation with tracking details." },
+        {
+          icon: FileText,
+          title: "Upload Invoice",
+          description:
+            "Upload purchase receipt for warranty verification and product validation.",
+        },
+        {
+          icon: Package,
+          title: "Select Products",
+          description:
+            "Choose affected products and specify support type (warranty claim, troubleshooting, etc.).",
+        },
+        {
+          icon: MessageSquare,
+          title: "Describe Issue",
+          description:
+            "Provide detailed description of the problem and desired resolution.",
+        },
+        {
+          icon: Mail,
+          title: "Submit & Notify",
+          description:
+            "Submit claim and receive email confirmation with tracking details.",
+        },
       ],
       problems: [
         "Manual invoice processing is slow and error-prone",
@@ -175,7 +249,34 @@ function HomePage() {
         "Companies scaling finance operations without increasing headcount",
       ],
     },
-  ]
+    {
+      id: "discord-integration",
+      icon: DiscordIcon,
+      iconColor: "text-indigo-500 border-indigo-500/20 bg-indigo-500/5",
+      badge: "Community Bot",
+      title: "Discord Chatbot Integration",
+      shortDescription:
+        "Intelligent Discord bot for community management and automated responses.",
+      fullDescription:
+        "Advanced Discord bot integration with AI-powered moderation, automated responses, and community engagement features.",
+      workflowUrl: process.env.NEXT_PUBLIC_DISCORD_URL || "https://discord.gg/ZaHWRcVN",
+      isInternalRoute: false,
+      problems: [
+        "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
+        "Manually checking loan rates from multiple Nepali banks is inefficient.",
+        "Staying updated with reliable news from The Kathmandu Post requires browsing multiple sources.",
+        "Investors and advisors lack a single platform that consolidates market data, bank loans, and news.",
+        "Critical financial and political insights are often delayed, impacting timely decisions.",
+      ],
+      useCases: [
+        "Investors and traders get instant updates on gold, silver, stocks, and Forex markets.",
+        "Compare loan rates from various Nepali banks to make informed borrowing decisions.",
+        "Receive daily verified news updates from The Kathmandu Post in Messenger.",
+        "Financial advisors provide real-time guidance to clients using consolidated data.",
+        "Students, professionals, and business owners track market trends and political news efficiently.",
+      ],
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans mx-auto max-w-7xl px-8">
@@ -287,7 +388,7 @@ function HomePage() {
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900 mb-3">Use Cases</h3>
                   <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-600">
-                    {workflows.find((w) => w.id === expandedWorkflow)?.useCases.map((u, idx) => (
+                    {workflows.find((w) => w.id === expandedWorkflow)?.useCases?.map((u, idx) => (
                       <li key={idx}>{u}</li>
                     ))}
                   </ul>
