@@ -1,8 +1,14 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { SickLeaveForm } from "@/components/contact-form"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { SickLeaveForm } from "@/components/contact-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   ArrowRight,
   Zap,
@@ -24,44 +30,53 @@ import {
   MessageSquare,
   MessageCircle,
   Clock,
-} from "lucide-react"
-import Image from "next/image"
-import { useState } from "react"
-import React from "react"
+} from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import React from "react";
+import { PAGES } from "@/constants";
 
 const DiscordIcon = ({ className }: { className?: string }) => (
-  <svg 
+  <svg
     className={className}
-    viewBox="0 0 24 24" 
-    fill="currentColor" 
+    viewBox="0 0 24 24"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0189 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z"/>
+    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0189 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9554 2.4189-2.1568 2.4189Z" />
   </svg>
-)
+);
 
-const WorkflowIcon = ({ icon: Icon, colorClass }: { icon: any; colorClass: string }) => (
-  <div className={`h-12 w-12 rounded-xl border flex items-center justify-center ${colorClass}`}>
+const WorkflowIcon = ({
+  icon: Icon,
+  colorClass,
+}: {
+  icon: any;
+  colorClass: string;
+}) => (
+  <div
+    className={`h-12 w-12 rounded-xl border flex items-center justify-center ${colorClass}`}
+  >
     <Icon className="h-6 w-6" />
   </div>
-)
+);
 
 function HomePage() {
-  const [expandedWorkflow, setExpandedWorkflow] = useState<string | null>(null)
+  const [expandedWorkflow, setExpandedWorkflow] = useState<string | null>(null);
 
   // Prevent background scrolling when modal is open
   React.useEffect(() => {
     if (expandedWorkflow) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = "unset";
     }
 
     // Cleanup on unmount
     return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [expandedWorkflow])
+      document.body.style.overflow = "unset";
+    };
+  }, [expandedWorkflow]);
 
   const workflows = [
     {
@@ -74,9 +89,7 @@ function HomePage() {
         "Your all-in-one Facebook AI assistant for real-time market updates, loans, and news.",
       fullDescription:
         "AskBhunte is a multimodal AI assistant integrated with Facebook Messenger. It delivers real-time updates on Forex, Stocks, Gold/Silver prices, Nepalese bank loan rates, and the latest news from The Kathmandu Post — all in one conversational interface.",
-      workflowUrl:
-        process.env.NEXT_PUBLIC_FACEBOOK_URL ||
-        "https://www.facebook.com/askbhunte",
+      workflowUrl: PAGES.FACEBOOK_URL || "https://www.facebook.com/askbhunte",
       problems: [
         "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
         "Manually checking loan rates from multiple Nepali banks is inefficient.",
@@ -259,7 +272,7 @@ function HomePage() {
         "Intelligent Discord bot for community management and automated responses.",
       fullDescription:
         "Advanced Discord bot integration with AI-powered moderation, automated responses, and community engagement features.",
-      workflowUrl: process.env.NEXT_PUBLIC_DISCORD_URL || "https://discord.gg/ZaHWRcVN",
+      workflowUrl: PAGES.DISCORD_URL || "https://discord.gg/ZaHWRcVN",
       isInternalRoute: false,
       problems: [
         "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
@@ -284,7 +297,10 @@ function HomePage() {
       <nav className="fixed top-0 left-0 w-full z-60 border-b border-slate-200 bg-white/80 backdrop-blur-md">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between">
-            <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity cursor-pointer">
+            <a
+              href="/"
+              className="flex items-center gap-2.5 hover:opacity-80 transition-opacity cursor-pointer"
+            >
               <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
                 <Zap className="h-5 w-5 text-white" />
               </div>
@@ -302,7 +318,8 @@ function HomePage() {
             Intelligent Workflow Solutions
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl leading-relaxed">
-            Enterprise-grade n8n automations integrated with cutting-edge AI for seamless business operations.
+            Enterprise-grade n8n automations integrated with cutting-edge AI for
+            seamless business operations.
           </p>
         </div>
 
@@ -314,16 +331,19 @@ function HomePage() {
             >
               {/* Gradient overlay on hover */}
               <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               <div className="absolute top-0 right-0 p-4 z-10">
                 <span className="inline-flex items-center rounded-full bg-blue-500/10 px-2.5 py-1 text-xs font-semibold text-blue-400 ring-1 ring-inset ring-blue-500/30 backdrop-blur-sm">
                   {workflow.badge}
                 </span>
               </div>
-              
+
               <CardHeader className="p-6 relative z-10 grow">
                 <div className="mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                  <WorkflowIcon icon={workflow.icon} colorClass={workflow.iconColor} />
+                  <WorkflowIcon
+                    icon={workflow.icon}
+                    colorClass={workflow.iconColor}
+                  />
                 </div>
                 <CardTitle className="text-2xl font-bold text-slate-900 leading-tight mb-3 group-hover:text-blue-900 transition-colors">
                   {workflow.title}
@@ -332,13 +352,13 @@ function HomePage() {
                   {workflow.shortDescription}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="px-6 pb-6 relative z-10 mt-auto">
                 <Button
                   className="w-full bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 border-0 text-white h-11 text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all duration-300 group/btn"
                   onClick={() => setExpandedWorkflow(workflow.id)}
                 >
-                  Explore Workflow 
+                  Explore Workflow
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                 </Button>
               </CardContent>
@@ -367,75 +387,103 @@ function HomePage() {
                 {workflows.find((w) => w.id === expandedWorkflow)?.title}
               </CardTitle>
               <CardDescription className="text-base sm:text-lg lg:text-xl mt-4 text-slate-600 leading-relaxed">
-                {workflows.find((w) => w.id === expandedWorkflow)?.fullDescription}
+                {
+                  workflows.find((w) => w.id === expandedWorkflow)
+                    ?.fullDescription
+                }
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 sm:p-6 lg:p-8 space-y-6">
-              
               {/* Problems & Use Cases for all workflows */}
-              {(workflows.find((w) => w.id === expandedWorkflow)?.problems?.length ?? 0) > 0 && (
+              {(workflows.find((w) => w.id === expandedWorkflow)?.problems
+                ?.length ?? 0) > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-3">Problems</h3>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                    Problems
+                  </h3>
                   <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-600">
-                    {workflows.find((w) => w.id === expandedWorkflow)?.problems.map((p, idx) => (
-                      <li key={idx}>{p}</li>
-                    ))}
+                    {workflows
+                      .find((w) => w.id === expandedWorkflow)
+                      ?.problems.map((p, idx) => (
+                        <li key={idx}>{p}</li>
+                      ))}
                   </ul>
                 </div>
               )}
-              
-              {(workflows.find((w) => w.id === expandedWorkflow)?.useCases?.length ?? 0) > 0 && (
+
+              {(workflows.find((w) => w.id === expandedWorkflow)?.useCases
+                ?.length ?? 0) > 0 && (
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-3">Use Cases</h3>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                    Use Cases
+                  </h3>
                   <ul className="list-disc pl-5 space-y-1.5 text-sm text-slate-600">
-                    {workflows.find((w) => w.id === expandedWorkflow)?.useCases?.map((u, idx) => (
-                      <li key={idx}>{u}</li>
-                    ))}
+                    {workflows
+                      .find((w) => w.id === expandedWorkflow)
+                      ?.useCases?.map((u, idx) => (
+                        <li key={idx}>{u}</li>
+                      ))}
                   </ul>
                 </div>
               )}
 
               {/* Key Steps */}
-              {(workflows.find((w) => w.id === expandedWorkflow)?.steps?.length ?? 0) > 0 && (
+              {(workflows.find((w) => w.id === expandedWorkflow)?.steps
+                ?.length ?? 0) > 0 && (
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-4">User Manual Steps</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-4">
+                    User Manual Steps
+                  </h3>
                   <div className="grid gap-3 sm:grid-cols-1 lg:grid-cols-2">
                     {workflows
                       .find((w) => w.id === expandedWorkflow)
                       ?.steps?.map((step, idx) => {
-                        const StepIcon = step.icon
+                        const StepIcon = step.icon;
                         return (
-                          <div key={idx} className="flex gap-3 p-3 rounded-lg border border-slate-200 bg-slate-50">
+                          <div
+                            key={idx}
+                            className="flex gap-3 p-3 rounded-lg border border-slate-200 bg-slate-50"
+                          >
                             <div className="h-8 w-8 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center shrink-0">
                               <StepIcon className="h-4 w-4 text-blue-600" />
                             </div>
                             <div>
-                              <p className="font-semibold text-slate-900 text-sm">{`${idx + 1}. ${step.title}`}</p>
-                              <p className="text-slate-600 text-xs mt-0.5 leading-relaxed">{step.description}</p>
+                              <p className="font-semibold text-slate-900 text-sm">{`${
+                                idx + 1
+                              }. ${step.title}`}</p>
+                              <p className="text-slate-600 text-xs mt-0.5 leading-relaxed">
+                                {step.description}
+                              </p>
                             </div>
                           </div>
-                        )
+                        );
                       })}
                   </div>
                 </div>
               )}
 
               {/* Launch Button */}
-              {workflows.find((w) => w.id === expandedWorkflow)?.workflowUrl && (
+              {workflows.find((w) => w.id === expandedWorkflow)
+                ?.workflowUrl && (
                 <Button
                   size="lg"
                   className="w-full h-12 sm:h-14 lg:h-16 text-base sm:text-lg lg:text-xl font-semibold bg-blue-600 hover:bg-blue-500 text-white transition-all duration-200"
                   asChild
                 >
                   <a
-                    href={workflows.find((w) => w.id === expandedWorkflow)?.workflowUrl}
+                    href={
+                      workflows.find((w) => w.id === expandedWorkflow)
+                        ?.workflowUrl
+                    }
                     target={
-                      workflows.find((w) => w.id === expandedWorkflow)?.isInternalRoute
+                      workflows.find((w) => w.id === expandedWorkflow)
+                        ?.isInternalRoute
                         ? "_self"
                         : "_blank"
                     }
                     rel={
-                      workflows.find((w) => w.id === expandedWorkflow)?.isInternalRoute
+                      workflows.find((w) => w.id === expandedWorkflow)
+                        ?.isInternalRoute
                         ? undefined
                         : "noopener noreferrer"
                     }
@@ -449,7 +497,7 @@ function HomePage() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;

@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
@@ -45,6 +44,7 @@ import {
   Info,
   ArrowLeft,
 } from "lucide-react";
+import { URLS } from "@/constants";
 
 const parseEvaluationContent = (content: string) => {
   let decision = "Pending";
@@ -388,9 +388,7 @@ export default function CVUploader() {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [customJobRequirements, setCustomJobRequirements] = useState("");
-  const [selectedJobPosition, setSelectedJobPosition] = useState<string>(
-    ""
-  );
+  const [selectedJobPosition, setSelectedJobPosition] = useState<string>("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -420,7 +418,7 @@ export default function CVUploader() {
     loadSamplePDF();
   }, []);
 
-  const webhookUrl = `${process.env.NEXT_PUBLIC_N8N_WEBHOOK_BASE_URL}${process.env.NEXT_PUBLIC_N8N_WEBHOOK_CV_FORM}`;
+  const webhookUrl = URLS.CV_FORM;
 
   const acceptedTypes = [".pdf"];
   const maxFileSize = 10 * 1024 * 1024; // 10MB
@@ -445,10 +443,7 @@ export default function CVUploader() {
 
   const processFileWithWorkflow = async (fileId: string, file: File) => {
     try {
-      console.log(
-        "Starting file upload to processing workflow:",
-        webhookUrl
-      );
+      console.log("Starting file upload to processing workflow:", webhookUrl);
 
       const formData = new FormData();
       formData.append("file", file);
@@ -458,7 +453,7 @@ export default function CVUploader() {
       const selectedPosition = JOB_POSITIONS.find(
         (pos) => pos.id === selectedJobPosition
       );
-      
+
       // Always pass job title and requirements if a position is selected
       if (selectedPosition) {
         formData.append("jobTitle", selectedPosition.title);
@@ -1035,10 +1030,10 @@ export default function CVUploader() {
       // Helper function to properly format markdown content
       const formatMarkdownForPDF = (content: string): string => {
         return content
-          .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold markers
-          .replace(/^#{1,6}\s+/gm, '') // Remove heading markers
-          .replace(/^[-*+]\s+/gm, '• ') // Convert list markers to bullets
-          .replace(/\n{3,}/g, '\n\n') // Reduce multiple line breaks
+          .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold markers
+          .replace(/^#{1,6}\s+/gm, "") // Remove heading markers
+          .replace(/^[-*+]\s+/gm, "• ") // Convert list markers to bullets
+          .replace(/\n{3,}/g, "\n\n") // Reduce multiple line breaks
           .trim();
       };
 
@@ -1069,18 +1064,22 @@ export default function CVUploader() {
       // Evaluation Reasons
       if (data.evaluation?.evaluationReasons) {
         addText("EVALUATION SUMMARY", 12, true);
-        const formattedContent = formatMarkdownForPDF(data.evaluation.evaluationReasons);
-        
+        const formattedContent = formatMarkdownForPDF(
+          data.evaluation.evaluationReasons
+        );
+
         // Split content into paragraphs and format properly
-        const paragraphs = formattedContent.split('\n\n');
+        const paragraphs = formattedContent.split("\n\n");
         paragraphs.forEach((paragraph) => {
           if (paragraph.trim()) {
-            if (paragraph.startsWith('•')) {
+            if (paragraph.startsWith("•")) {
               // Handle bullet points
               addText(paragraph, 10, false);
-            } else if (paragraph.toLowerCase().includes('strengths') || 
-                      paragraph.toLowerCase().includes('weaknesses') ||
-                      paragraph.toLowerCase().includes('recommendation')) {
+            } else if (
+              paragraph.toLowerCase().includes("strengths") ||
+              paragraph.toLowerCase().includes("weaknesses") ||
+              paragraph.toLowerCase().includes("recommendation")
+            ) {
               // Handle section headers
               addText(paragraph, 11, true);
             } else {
@@ -1154,48 +1153,87 @@ export default function CVUploader() {
           <p className="text-slate-700 text-sm font-medium mb-2">
             Get professional feedback in 3 steps
           </p>
-          
+
           {/* Progress Bar */}
           <div className="max-w-2xl mx-auto mb-3">
             <div className="flex items-center justify-between mb-2 relative px-4">
-              <div className={`flex flex-col items-center gap-1 ${selectedJobPosition ? 'text-blue-600' : 'text-slate-400'} z-10 relative`}>
-                <div className={`w-7 h-7 rounded-full ${selectedJobPosition ? 'bg-blue-600' : 'bg-slate-300'} text-white flex items-center justify-center transition-all shadow-sm`}>
+              <div
+                className={`flex flex-col items-center gap-1 ${
+                  selectedJobPosition ? "text-blue-600" : "text-slate-400"
+                } z-10 relative`}
+              >
+                <div
+                  className={`w-7 h-7 rounded-full ${
+                    selectedJobPosition ? "bg-blue-600" : "bg-slate-300"
+                  } text-white flex items-center justify-center transition-all shadow-sm`}
+                >
                   {selectedJobPosition ? (
                     <CheckCircle className="w-4 h-4" />
                   ) : (
                     <Briefcase className="w-4 h-4" />
                   )}
                 </div>
-                <span className="text-[11px] font-medium text-center">Choose Position</span>
+                <span className="text-[11px] font-medium text-center">
+                  Choose Position
+                </span>
               </div>
-              <div className={`flex flex-col items-center gap-1 ${files.length > 0 ? 'text-indigo-600' : 'text-slate-400'} z-10 relative`}>
-                <div className={`w-7 h-7 rounded-full ${files.length > 0 ? 'bg-indigo-600' : 'bg-slate-300'} text-white flex items-center justify-center transition-all shadow-sm`}>
+              <div
+                className={`flex flex-col items-center gap-1 ${
+                  files.length > 0 ? "text-indigo-600" : "text-slate-400"
+                } z-10 relative`}
+              >
+                <div
+                  className={`w-7 h-7 rounded-full ${
+                    files.length > 0 ? "bg-indigo-600" : "bg-slate-300"
+                  } text-white flex items-center justify-center transition-all shadow-sm`}
+                >
                   {files.length > 0 ? (
                     <CheckCircle className="w-4 h-4" />
                   ) : (
                     <Upload className="w-4 h-4" />
                   )}
                 </div>
-                <span className="text-[11px] font-medium text-center">Upload CV</span>
+                <span className="text-[11px] font-medium text-center">
+                  Upload CV
+                </span>
               </div>
-              <div className={`flex flex-col items-center gap-1 ${files.some(f => f.status === 'success') ? 'text-purple-600' : 'text-slate-400'} z-10 relative`}>
-                <div className={`w-7 h-7 rounded-full ${files.some(f => f.status === 'success') ? 'bg-purple-600' : 'bg-slate-300'} text-white flex items-center justify-center transition-all shadow-sm`}>
-                  {files.some(f => f.status === 'success') ? (
+              <div
+                className={`flex flex-col items-center gap-1 ${
+                  files.some((f) => f.status === "success")
+                    ? "text-purple-600"
+                    : "text-slate-400"
+                } z-10 relative`}
+              >
+                <div
+                  className={`w-7 h-7 rounded-full ${
+                    files.some((f) => f.status === "success")
+                      ? "bg-purple-600"
+                      : "bg-slate-300"
+                  } text-white flex items-center justify-center transition-all shadow-sm`}
+                >
+                  {files.some((f) => f.status === "success") ? (
                     <CheckCircle className="w-4 h-4" />
                   ) : (
                     <Award className="w-4 h-4" />
                   )}
                 </div>
-                <span className="text-[11px] font-medium text-center">Get Results</span>
+                <span className="text-[11px] font-medium text-center">
+                  Get Results
+                </span>
               </div>
               {/* Progress bar - only show background when there's progress */}
               {selectedJobPosition && files.length > 0 && (
-                <div className="absolute top-3.5 z-0" style={{ left: '45px', right: '45px' }}>
+                <div
+                  className="absolute top-3.5 z-0"
+                  style={{ left: "45px", right: "45px" }}
+                >
                   <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-linear-to-r from-blue-600 via-indigo-600 to-purple-600 transition-all duration-500 ease-out rounded-full"
                       style={{
-                        width: `${files.some(f => f.status === 'success') ? 100 : 50}%`
+                        width: `${
+                          files.some((f) => f.status === "success") ? 100 : 50
+                        }%`,
                       }}
                     ></div>
                   </div>
@@ -1204,7 +1242,7 @@ export default function CVUploader() {
             </div>
           </div>
         </div>
-        
+
         {successfulFiles.length > 0 ? (
           // Results Layout - Full Width
           <div className="w-full">
@@ -1264,7 +1302,9 @@ export default function CVUploader() {
                           No analysis data available for this file
                         </div>
                       )}
-                      {successfulFiles.length > 1 && <Separator className="mt-4" />}
+                      {successfulFiles.length > 1 && (
+                        <Separator className="mt-4" />
+                      )}
                     </div>
                   ))}
                 </div>
@@ -1274,106 +1314,118 @@ export default function CVUploader() {
         ) : (
           // Upload Layout - Two Columns
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
-              {/* Left Side - Job Requirements */}
-              <Card className="bg-white border-slate-200 shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-h-125 min-h-100 overflow-hidden flex flex-col">
-                <CardHeader className="bg-linear-to-r from-blue-600 via-blue-700 to-indigo-600 shrink-0 py-1.5 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-                  <div className="relative flex items-center gap-2">
-                    <div className="p-1 bg-white/20 backdrop-blur-sm rounded-lg">
-                      <Briefcase className="w-3 h-3 text-white" />
+            {/* Left Side - Job Requirements */}
+            <Card className="bg-white border-slate-200 shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-h-125 min-h-100 overflow-hidden flex flex-col">
+              <CardHeader className="bg-linear-to-r from-blue-600 via-blue-700 to-indigo-600 shrink-0 py-1.5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
+                <div className="relative flex items-center gap-2">
+                  <div className="p-1 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <Briefcase className="w-3 h-3 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-white text-sm font-bold leading-tight">
+                      {JOB_POSITIONS.find((p) => p.id === selectedJobPosition)
+                        ?.title || "Job Requirements"}
+                    </CardTitle>
+                    <CardDescription className="text-blue-100 text-[10px] font-medium">
+                      {selectedJobPosition
+                        ? "Review requirements below"
+                        : "Select position to begin"}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="p-2 space-y-1 bg-linear-to-b from-slate-50 to-white flex-1 overflow-y-auto">
+                <div className="shrink-0 bg-blue-50 p-1.5 rounded-lg border border-blue-200">
+                  <div className="flex items-start gap-2 mb-1">
+                    <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold shrink-0">
+                      1
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-white text-sm font-bold leading-tight">
-                        {JOB_POSITIONS.find((p) => p.id === selectedJobPosition)
-                          ?.title || "Job Requirements"}
-                      </CardTitle>
-                      <CardDescription className="text-blue-100 text-[10px] font-medium">
-                        {selectedJobPosition ? "Review requirements below" : "Select position to begin"}
-                      </CardDescription>
+                    <div>
+                      <label className="block text-base font-bold text-slate-800 mb-0.5">
+                        Step 1: Choose Job Position
+                      </label>
+                      <p className="text-sm text-slate-600 mb-1">
+                        Select the role you're applying for
+                      </p>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="p-2 space-y-1 bg-linear-to-b from-slate-50 to-white flex-1 overflow-y-auto">
-                  <div className="shrink-0 bg-blue-50 p-1.5 rounded-lg border border-blue-200">
-                    <div className="flex items-start gap-2 mb-1">
-                      <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold shrink-0">1</div>
-                      <div>
-                        <label className="block text-base font-bold text-slate-800 mb-0.5">
-                          Step 1: Choose Job Position
-                        </label>
-                        <p className="text-sm text-slate-600 mb-1">
-                          Select the role you're applying for
+                  <Select
+                    value={selectedJobPosition}
+                    onValueChange={setSelectedJobPosition}
+                  >
+                    <SelectTrigger className="w-full bg-white border-slate-300 text-slate-900 text-sm">
+                      <SelectValue placeholder="Select Job Position" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-slate-200">
+                      {JOB_POSITIONS.map((position) => (
+                        <SelectItem
+                          key={position.id}
+                          value={position.id}
+                          className="text-slate-900 focus:bg-slate-100 focus:text-slate-900 text-sm"
+                        >
+                          {position.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Job Requirements List */}
+                <div className="space-y-1">
+                  {selectedJobPosition ? (
+                    JOB_POSITIONS.find(
+                      (p) => p.id === selectedJobPosition
+                    )?.requirements.map((req, index) => (
+                      <div
+                        key={index}
+                        className="flex gap-2 items-start p-2 bg-white rounded border border-slate-100 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200"
+                      >
+                        <div className="w-2 h-2 rounded-full bg-linear-to-br from-blue-600 to-indigo-600 mt-1.5 shrink-0" />
+                        <p className="text-sm text-slate-800 leading-relaxed">
+                          {req}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center py-4 text-slate-400">
+                      <div className="text-center">
+                        <Briefcase className="w-6 h-6 mx-auto mb-1 text-slate-300" />
+                        <p className="text-sm font-medium">
+                          Please select a job position above
+                        </p>
+                        <p className="text-xs mt-0.5">
+                          Requirements will appear here
                         </p>
                       </div>
                     </div>
-                    <Select
-                      value={selectedJobPosition}
-                      onValueChange={setSelectedJobPosition}
-                    >
-                      <SelectTrigger className="w-full bg-white border-slate-300 text-slate-900 text-sm">
-                        <SelectValue placeholder="Select Job Position" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-200">
-                        {JOB_POSITIONS.map((position) => (
-                          <SelectItem
-                            key={position.id}
-                            value={position.id}
-                            className="text-slate-900 focus:bg-slate-100 focus:text-slate-900 text-sm"
-                          >
-                            {position.title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
-                  {/* Job Requirements List */}
-                  <div className="space-y-1">
-                    {selectedJobPosition ? (
-                      JOB_POSITIONS.find(
-                        (p) => p.id === selectedJobPosition
-                      )?.requirements.map((req, index) => (
-                        <div key={index} className="flex gap-2 items-start p-2 bg-white rounded border border-slate-100 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200">
-                          <div className="w-2 h-2 rounded-full bg-linear-to-br from-blue-600 to-indigo-600 mt-1.5 shrink-0" />
-                          <p className="text-sm text-slate-800 leading-relaxed">
-                            {req}
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="flex items-center justify-center py-4 text-slate-400">
-                        <div className="text-center">
-                          <Briefcase className="w-6 h-6 mx-auto mb-1 text-slate-300" />
-                          <p className="text-sm font-medium">Please select a job position above</p>
-                          <p className="text-xs mt-0.5">Requirements will appear here</p>
-                        </div>
-                      </div>
-                    )}
+            {/* Right Side - Upload Area */}
+            <Card className="bg-white border-slate-200 shadow-lg hover:shadow-xl transition-shadow duration-300 w-full min-h-100">
+              <CardHeader className="bg-linear-to-r from-indigo-600 via-purple-600 to-purple-700 shrink-0 py-1.5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
+                <div className="relative flex items-center gap-2">
+                  <div className="p-1 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <Upload className="w-3 h-3 text-white" />
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Right Side - Upload Area */}
-              <Card className="bg-white border-slate-200 shadow-lg hover:shadow-xl transition-shadow duration-300 w-full min-h-100">
-                <CardHeader className="bg-linear-to-r from-indigo-600 via-purple-600 to-purple-700 shrink-0 py-1.5 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-                  <div className="relative flex items-center gap-2">
-                    <div className="p-1 bg-white/20 backdrop-blur-sm rounded-lg">
-                      <Upload className="w-3 h-3 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-white text-sm font-bold leading-tight">
-                        Upload Your CV
-                      </CardTitle>
-                      <CardDescription className="text-purple-100 text-[10px] font-medium">
-                        Upload your own CV or process with the sample provided below
-                      </CardDescription>
-                    </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-white text-sm font-bold leading-tight">
+                      Upload Your CV
+                    </CardTitle>
+                    <CardDescription className="text-purple-100 text-[10px] font-medium">
+                      Upload your own CV or process with the sample provided
+                      below
+                    </CardDescription>
                   </div>
-                </CardHeader>
-                <CardContent className="p-2 space-y-1 flex-1 bg-linear-to-b from-slate-50 to-white overflow-y-auto">
-                  <div
-                    className={`
+                </div>
+              </CardHeader>
+              <CardContent className="p-2 space-y-1 flex-1 bg-linear-to-b from-slate-50 to-white overflow-y-auto">
+                <div
+                  className={`
                         relative border-2 border-dashed rounded-xl transition-all duration-300 cursor-pointer
                         ${
                           isDragOver
@@ -1381,55 +1433,57 @@ export default function CVUploader() {
                             : "border-slate-300 hover:border-blue-400 hover:bg-slate-50 hover:shadow-md"
                         }
                       `}
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      // Removed multiple attribute
-                      // multiple
-                      accept=".pdf"
-                      onChange={handleFileSelect}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    />
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    // Removed multiple attribute
+                    // multiple
+                    accept=".pdf"
+                    onChange={handleFileSelect}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
 
-                    <div className="p-3 space-y-1.5 pointer-events-none">
-                      <div className="flex items-center justify-center gap-2 mb-1">
-                        <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">2</div>
-                        <h3 className="text-base font-bold text-slate-900">
-                          Step 2: Upload Your CV
-                        </h3>
+                  <div className="p-3 space-y-1.5 pointer-events-none">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">
+                        2
                       </div>
-                      <div className="mx-auto w-10 h-10 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <Upload className="w-5 h-5 text-white" />
-                      </div>
+                      <h3 className="text-base font-bold text-slate-900">
+                        Step 2: Upload Your CV
+                      </h3>
+                    </div>
+                    <div className="mx-auto w-10 h-10 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                      <Upload className="w-5 h-5 text-white" />
+                    </div>
 
-                      <div className="text-center">
-                        <p className="text-slate-700 text-sm font-semibold mb-0.5">
-                          Drag & drop here
-                        </p>
-                        <p className="text-slate-600 text-sm mb-1">
-                          or click button below
-                        </p>
-                        <p className="text-slate-500 text-sm bg-slate-100 inline-block px-2 py-0.5 rounded-full">
-                          PDF • Max 10MB
-                        </p>
-                      </div>
+                    <div className="text-center">
+                      <p className="text-slate-700 text-sm font-semibold mb-0.5">
+                        Drag & drop here
+                      </p>
+                      <p className="text-slate-600 text-sm mb-1">
+                        or click button below
+                      </p>
+                      <p className="text-slate-500 text-sm bg-slate-100 inline-block px-2 py-0.5 rounded-full">
+                        PDF • Max 10MB
+                      </p>
+                    </div>
 
-                      <div className="flex justify-center">
-                        <Button
-                          onClick={() => fileInputRef.current?.click()}
-                          size="sm"
-                          className="bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-auto font-semibold text-sm h-8"
-                        >
-                          <Upload className="w-4 h-4 mr-1.5" />
-                          Choose File
-                        </Button>
-                      </div>
+                    <div className="flex justify-center">
+                      <Button
+                        onClick={() => fileInputRef.current?.click()}
+                        size="sm"
+                        className="bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-auto font-semibold text-sm h-8"
+                      >
+                        <Upload className="w-4 h-4 mr-1.5" />
+                        Choose File
+                      </Button>
                     </div>
                   </div>
+                </div>
 
                 {/* File List */}
                 {files.length > 0 && (
@@ -1441,7 +1495,7 @@ export default function CVUploader() {
                       >
                         {/* Decorative background element */}
                         <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-blue-400/10 to-indigo-400/10 rounded-full -mr-16 -mt-16"></div>
-                        
+
                         <div className="flex items-center gap-3 relative z-10">
                           <div className="p-2.5 bg-linear-to-br from-blue-600 to-indigo-700 rounded-xl shrink-0 shadow-lg">
                             <FileText className="w-5 h-5 text-white" />
@@ -1539,24 +1593,27 @@ export default function CVUploader() {
                               </div>
                             )}
 
-                            {uploadedFile.status === "ready" && selectedJobPosition && (
-                              <div className="mt-2 pt-2 border-t border-blue-100">
-                                <Button
-                                  size="sm"
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    console.log("Button clicked!", { selectedJobPosition }); // Debug log
-                                    handleIndividualSubmit(uploadedFile.id);
-                                  }}
-                                  className="w-full h-9 bg-linear-to-r from-green-600 via-emerald-600 to-green-700 hover:from-green-700 hover:via-emerald-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 text-sm font-bold rounded-lg cursor-pointer pointer-events-auto"
-                                >
-                                  <Send className="w-4 h-4 mr-1.5" />
-                                  <span>Analyze CV</span>
-                                </Button>
-                              </div>
-                            )}
+                            {uploadedFile.status === "ready" &&
+                              selectedJobPosition && (
+                                <div className="mt-2 pt-2 border-t border-blue-100">
+                                  <Button
+                                    size="sm"
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      console.log("Button clicked!", {
+                                        selectedJobPosition,
+                                      }); // Debug log
+                                      handleIndividualSubmit(uploadedFile.id);
+                                    }}
+                                    className="w-full h-9 bg-linear-to-r from-green-600 via-emerald-600 to-green-700 hover:from-green-700 hover:via-emerald-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 text-sm font-bold rounded-lg cursor-pointer pointer-events-auto"
+                                  >
+                                    <Send className="w-4 h-4 mr-1.5" />
+                                    <span>Analyze CV</span>
+                                  </Button>
+                                </div>
+                              )}
 
                             {uploadedFile.status === "error" &&
                               uploadedFile.error && (
@@ -1573,9 +1630,9 @@ export default function CVUploader() {
                     ))}
                   </div>
                 )}
-                </CardContent>
-              </Card>
-            </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
       </div>
     </div>
