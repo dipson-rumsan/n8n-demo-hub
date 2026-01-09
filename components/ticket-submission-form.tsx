@@ -69,7 +69,7 @@ export function TicketSubmissionForm() {
       })
 
       if (response.ok) {
-        const result = await response.json()
+        const result = await response.json() as { ticketId: string }
         toast({
           title: "Ticket Submitted Successfully",
           description: `Your ticket #${result.ticketId} has been submitted for review.`,

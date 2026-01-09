@@ -421,7 +421,7 @@ export default function CVUploader() {
   const webhookUrl = URLS.CV_FORM;
 
   const acceptedTypes = [".pdf"];
-  const maxFileSize = 10 * 1024 * 1024; // 10MB
+  const maxFileSize = 5 * 1024 * 1024; // 5MB
 
   const validateFile = (file: File): string | null => {
     const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
@@ -443,8 +443,6 @@ export default function CVUploader() {
 
   const processFileWithWorkflow = async (fileId: string, file: File) => {
     try {
-      console.log("Starting file upload to processing workflow:", webhookUrl);
-
       const formData = new FormData();
       formData.append("file", file);
       formData.append("filename", file.name);
@@ -479,8 +477,6 @@ export default function CVUploader() {
         credentials: "omit",
       });
 
-      console.log("Processing response status:", response.status);
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -490,12 +486,6 @@ export default function CVUploader() {
       );
 
       const responseText = await response.text();
-      console.log(
-        "Raw response text:",
-        responseText.substring(0, 500) +
-          (responseText.length > 500 ? "..." : "")
-      );
-
       let result: ParsedData = {};
 
       try {
@@ -504,7 +494,6 @@ export default function CVUploader() {
           .trim()
           .split("\n")
           .filter((line) => line.trim());
-        console.log("Found", lines.length, "JSON lines to parse");
 
         let combinedContent = "";
         let metadata: any = null;
@@ -512,8 +501,6 @@ export default function CVUploader() {
         for (const line of lines) {
           try {
             const jsonObj = JSON.parse(line);
-            console.log("Parsed JSON object:", jsonObj);
-
             if (jsonObj.type === "begin") {
               metadata = jsonObj.metadata;
             } else if (jsonObj.type === "item" && jsonObj.content) {
@@ -534,11 +521,6 @@ export default function CVUploader() {
 
         // If we have combined content, try to parse it as the final result
         if (combinedContent.trim()) {
-          console.log(
-            "Combined content:",
-            combinedContent.substring(0, 200) + "..."
-          );
-
           try {
             // Try to parse the combined content as JSON
             const parsedContent = JSON.parse(combinedContent);
@@ -571,12 +553,6 @@ export default function CVUploader() {
             },
           };
         }
-
-        console.log("Final processed result:", result);
-        console.log("Evaluation data:", result.evaluation);
-        console.log("Skills:", result.skills);
-        console.log("Experience:", result.experience);
-        console.log("Education:", result.education);
       } catch (parseError) {
         console.error("Error parsing NDJSON response:", parseError);
 
@@ -1468,7 +1444,7 @@ export default function CVUploader() {
                         or click button below
                       </p>
                       <p className="text-slate-500 text-sm bg-slate-100 inline-block px-2 py-0.5 rounded-full">
-                        PDF • Max 10MB
+                        PDF • Max 5MB
                       </p>
                     </div>
 
@@ -1602,9 +1578,6 @@ export default function CVUploader() {
                                     onClick={(e) => {
                                       e.preventDefault();
                                       e.stopPropagation();
-                                      console.log("Button clicked!", {
-                                        selectedJobPosition,
-                                      }); // Debug log
                                       handleIndividualSubmit(uploadedFile.id);
                                     }}
                                     className="w-full h-9 bg-linear-to-r from-green-600 via-emerald-600 to-green-700 hover:from-green-700 hover:via-emerald-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all duration-300 text-sm font-bold rounded-lg cursor-pointer pointer-events-auto"

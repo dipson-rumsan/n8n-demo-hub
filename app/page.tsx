@@ -47,6 +47,17 @@ const DiscordIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const TelegramIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-.962 6.502-.378 1.73-.77 2.237-1.29 2.237-.46 0-.952-.312-1.48-.696l-2.12-1.509c-.664-.45-1.077-.717-1.743-1.148-.766-.498-.266-1.062.219-1.685.127-.163 2.348-2.207 2.399-2.398.006-.024.011-.085-.04-.12-.05-.035-.124-.023-.177-.014-.075.013-1.269.842-3.585 2.472-.433.316-.825.47-1.179.465-.388-.006-1.135-.216-1.69-.393-.678-.218-1.217-.332-1.169-.7.025-.192.308-.39.85-.592 3.508-1.524 5.847-2.529 7.018-3.014 2.791-1.155 3.376-1.356 3.756-1.356z" />
+  </svg>
+);
+
 const WorkflowIcon = ({
   icon: Icon,
   colorClass,
@@ -89,7 +100,7 @@ function HomePage() {
         "Your all-in-one Facebook AI assistant for real-time market updates, loans, and news.",
       fullDescription:
         "AskBhunte is a multimodal AI assistant integrated with Facebook Messenger. It delivers real-time updates on Forex, Stocks, Gold/Silver prices, Nepalese bank loan rates, and the latest news from The Kathmandu Post — all in one conversational interface.",
-      workflowUrl: PAGES.FACEBOOK_URL || "https://www.facebook.com/askbhunte",
+      workflowUrl: PAGES.FACEBOOK_URL,
       problems: [
         "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
         "Manually checking loan rates from multiple Nepali banks is inefficient.",
@@ -272,7 +283,34 @@ function HomePage() {
         "Intelligent Discord bot for community management and automated responses.",
       fullDescription:
         "Advanced Discord bot integration with AI-powered moderation, automated responses, and community engagement features.",
-      workflowUrl: PAGES.DISCORD_URL || "https://discord.gg/ZaHWRcVN",
+      workflowUrl: PAGES.DISCORD_URL,
+      isInternalRoute: false,
+      problems: [
+        "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
+        "Manually checking loan rates from multiple Nepali banks is inefficient.",
+        "Staying updated with reliable news from The Kathmandu Post requires browsing multiple sources.",
+        "Investors and advisors lack a single platform that consolidates market data, bank loans, and news.",
+        "Critical financial and political insights are often delayed, impacting timely decisions.",
+      ],
+      useCases: [
+        "Investors and traders get instant updates on gold, silver, stocks, and Forex markets.",
+        "Compare loan rates from various Nepali banks to make informed borrowing decisions.",
+        "Receive daily verified news updates from The Kathmandu Post in Messenger.",
+        "Financial advisors provide real-time guidance to clients using consolidated data.",
+        "Students, professionals, and business owners track market trends and political news efficiently.",
+      ],
+    },
+    {
+      id: "telegram-integration",
+      icon: TelegramIcon,
+      iconColor: "text-sky-500 border-sky-500/20 bg-sky-500/5",
+      badge: "Messaging Bot",
+      title: "Telegram Chatbot Integration",
+      shortDescription:
+        "Smart Telegram bot for instant communication and automated customer support.",
+      fullDescription:
+        "Advanced Telegram bot integration with AI-powered responses, automated support, and seamless communication features for instant customer engagement.",
+      workflowUrl: PAGES.TELEGRAM_URL,
       isInternalRoute: false,
       problems: [
         "Keeping track of gold, silver, stocks, and Forex prices in real-time is tedious.",
@@ -366,19 +404,21 @@ function HomePage() {
           ))}
         </div>
       </main>
-
+      {/*
+            description section
+            */}
       {/* Expanded Workflow Modal */}
       {expandedWorkflow && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xl z-50 flex items-start justify-center p-4 pt-16">
-          <Card className="h-[95vh] w-full max-w-4xl relative bg-white border-slate-200 shadow-2xl overflow-y-auto rounded-xl">
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xl z-50 flex items-start justify-center p-4 pt-16 ">
+          <Card className="h-[95vh] w-full max-w-4xl relative bg-white border-slate-200 shadow-2xl overflow-y-auto rounded-xl ">
             <button
               onClick={() => setExpandedWorkflow(null)}
               className="absolute top-4 right-4 p-2 hover:bg-slate-100 rounded-full transition-colors z-20 bg-white/80 backdrop-blur-sm shadow-sm"
             >
               <X className="h-5 w-5 text-slate-600" />
             </button>
-            <CardHeader className="p-6 sm:p-8">
-              <div className="flex items-center gap-4 mb-4">
+            <CardHeader className="px-6 sm:px-8 pt-6 sm:pt-8 pb-2 sm:pb-3">
+              <div className="flex items-center gap-4 mb-4 ">
                 <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 text-xs font-semibold ring-1 ring-blue-500/20">
                   {workflows.find((w) => w.id === expandedWorkflow)?.badge}
                 </span>
@@ -393,7 +433,11 @@ function HomePage() {
                 }
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 lg:p-8 space-y-6">
+
+            <CardContent
+              className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 space-y-4 -mt-2 sm:-mt-3
+            "
+            >
               {/* Problems & Use Cases for all workflows */}
               {(workflows.find((w) => w.id === expandedWorkflow)?.problems
                 ?.length ?? 0) > 0 && (

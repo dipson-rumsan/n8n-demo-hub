@@ -103,7 +103,7 @@ export function SickLeaveForm() {
       try {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-          const responseData = await response.json();
+          const responseData = (await response.json()) as { message?: string };
           message = responseData?.message || message;
         } else {
           // Response is not JSON, try to read as text
@@ -114,7 +114,6 @@ export function SickLeaveForm() {
         }
       } catch (parseError) {
         // Ignore parsing errors, use default message
-        console.log("Using default message due to response parsing issue");
       }
 
       setWebhookResponse(message);
