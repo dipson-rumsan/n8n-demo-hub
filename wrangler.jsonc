@@ -11,6 +11,8 @@
     "binding": "ASSETS"
   },
   "vars": {
-    "NEXT_PUBLIC_N8N_WEBHOOK_BASE_URL": "https://n8n-webhook.rumsan.net"
+    "NEXT_PUBLIC_N8N_WEBHOOK_BASE_URL": "https://n8n-webhook.rumsan.net",
+    "RETELL_API_KEY": "",
+    "AGENT_ID": ""
   }
 }

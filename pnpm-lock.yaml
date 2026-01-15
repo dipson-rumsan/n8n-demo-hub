@@ -152,9 +152,6 @@ importers:
       retell-client-js-sdk:
         specifier: ^2.0.7
         version: 2.0.7(@types/dom-mediacapture-record@1.0.22)
-      retell-sdk:
-        specifier: ^4.66.0
-        version: 4.66.0
       sonner:
         specifier: ^1.7.4
         version: 1.7.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -3555,9 +3552,6 @@ packages:
 
   retell-client-js-sdk@2.0.7:
     resolution: {integrity: sha512-56iFklXfqVZuniEioMPVKylhBqjN+Xk7Mmv8Q/lGyEnvBBi5B9R6WPJDInlcyXltWH1EsXPjLoVgJI9Xpje68w==}
-
-  retell-sdk@4.66.0:
-    resolution: {integrity: sha512-xDn8Zb3je2WvbfkhD/C/r2D059U/9DB2NAF3nStYLxE61XPGxEmz/L/U70JvtQ2mzSm/bRMhLxmlwzmApSlpfQ==}
 
   rgbcolor@1.0.1:
     resolution: {integrity: sha512-9aZLIrhRaD97sgVhtJOW6ckOEh6/GnvQtdVNfdZ6s67+3/XwLS9lBcQYzEEhYVeUowN7pRzMLsyGhK2i/xvWbw==}
@@ -7982,18 +7976,6 @@ snapshots:
       livekit-client: 2.17.0(@types/dom-mediacapture-record@1.0.22)
     transitivePeerDependencies:
       - '@types/dom-mediacapture-record'
-
-  retell-sdk@4.66.0:
-    dependencies:
-      '@types/node': 18.19.130
-      '@types/node-fetch': 2.6.13
-      abort-controller: 3.0.0
-      agentkeepalive: 4.6.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
 
   rgbcolor@1.0.1:
     optional: true
