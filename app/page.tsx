@@ -30,6 +30,9 @@ import {
   MessageSquare,
   MessageCircle,
   Clock,
+  Mic,
+  Phone,
+  Bot,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -325,6 +328,58 @@ function HomePage() {
         "Receive daily verified news updates from The Kathmandu Post in Messenger.",
         "Financial advisors provide real-time guidance to clients using consolidated data.",
         "Students, professionals, and business owners track market trends and political news efficiently.",
+      ],
+    },
+    {
+      id: "voice-agent",
+      icon: Bot,
+      iconColor: "text-purple-500 border-purple-500/20 bg-purple-500/5",
+      badge: "AI Voice",
+      title: "Rumsan Voice Agent Assistant",
+      shortDescription:
+        "AI-powered voice conversations with real-time transcription and natural language processing.",
+      fullDescription:
+        "Experience natural voice interactions with our AI agent. Features real-time voice recognition, intelligent responses, and comprehensive conversation transcripts.",
+      workflowUrl: "/voiceAgent",
+      isInternalRoute: true,
+      steps: [
+        {
+          icon: Phone,
+          title: "Start Voice Call",
+          description: "Initiate a voice conversation with the AI agent.",
+        },
+        {
+          icon: Mic,
+          title: "Voice Recognition",
+          description:
+            "AI processes your speech in real-time with high accuracy.",
+        },
+        {
+          icon: MessageCircle,
+          title: "Intelligent Response",
+          description:
+            "Agent provides contextual responses through voice and text.",
+        },
+        {
+          icon: FileText,
+          title: "Conversation Transcript",
+          description:
+            "View complete conversation history with user and agent messages.",
+        },
+      ],
+      problems: [
+        "Complex services like AI, blockchain, and Web3 are hard to explain clearly through text alone.",
+        "Manual handling of inquiries and scheduling leads to delays and limited availability.",
+        "Clients across regions need 24/7 access to service information and support.",
+        "Text-based communication creates accessibility and language barriers.",
+        "Client conversations are not always recorded for follow-ups and insights.",
+      ],
+      useCases: [
+        "Voice-Based Client Support: Natural conversations to explain Rumsan's services and products.",
+        "Consultation & Demo Scheduling: Easy voice booking for consultations and demos of Rahat, eSatya, and Hamro LifeBank.",
+        "Simplifying Technology Discussions: Clear voice explanations for AI, blockchain, and Web3 solutions.",
+        "24/7 Virtual Org Agent: Always-on support for inquiries, scheduling, and service discovery.",
+        "Conversation Records & Insights: Logged interactions for better follow-ups and continuous improvement.",
       ],
     },
   ];
