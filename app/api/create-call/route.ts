@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import Retell from "retell-sdk";
 
 export async function POST(request: Request) {
   try {
@@ -27,11 +26,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Initialize Retell client
-    const retellClient = new Retell({ apiKey });
-
-    // Create a web call and get access token
-    const webCallResponse = await retellClient.call.createWebCall({
+    // Create web call using direct fetch (Cloudflare Workers compatible)
+    const payload = {
       agent_id: agentId,
       // Optional: Add metadata for tracking
       metadata: {
@@ -44,18 +40,55 @@ export async function POST(request: Request) {
         current_time: new Date().toLocaleString(),
         ...dynamicVariables,
       },
+    };
+
+    const response = await fetch("https://api.retellai.com/v2/create-web-call", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Retell API error:", response.status, errorText);
+      return NextResponse.json(
+        { 
+          error: "Failed to create web call",
+          details: errorText,
+          status: response.status 
+        },
+        { status: response.status }
+      );
+    }
+
+    const webCallResponse = await response.json() as {
+      access_token?: string;
+      call_id?: string;
+      [key: string]: any;
+    };
+
+    // Validate response structure
+    if (!webCallResponse.access_token) {
+      console.error("Missing access_token in Retell response:", webCallResponse);
+      return NextResponse.json(
+        { error: "Invalid response from Retell API - missing access token" },
+        { status: 500 }
+      );
+    }
     
     // Return token to frontend
     return NextResponse.json({
       access_token: webCallResponse.access_token,
-      call_id: webCallResponse.call_id,
+      call_id: webCallResponse.call_id || null,
       message: "Token generated successfully",
     });
   } catch (error) {
     console.error("Error generating Retell token:", error);
     
-    // Handle specific Retell API errors
+    // Handle specific errors
     if (error instanceof Error) {
       return NextResponse.json(
         { 
