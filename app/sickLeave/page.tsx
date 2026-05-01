@@ -1,4 +1,4 @@
-import { SickLeaveForm } from "@/components/contact-form"
+import { SickLeaveForm } from "@/components/sick-leave"
 import { ArrowLeft, Zap } from "lucide-react"
 import Link from "next/link"
 

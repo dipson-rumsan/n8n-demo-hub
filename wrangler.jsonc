@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "rumsan-automation-website",
+  "compatibility_date": "2026-04-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "NEXT_PUBLIC_N8N_WEBHOOK_BASE_URL": "https://n8n-webhook.rumsan.net",
+    "RETELL_API_KEY": "",
+    "AGENT_ID": "",
+    "NEXT_PUBLIC_VOICE_AGENT_URL": "https://app.dograh.com/embed/dograh-widget.js?token=emb_zCBKyMBGcbtwU5Kz2Y4NkMLamwwOcSUZHIym2BkrIfk&environment=production&apiEndpoint=https://api.dograh.com",
+    "NEXT_PUBLIC_FACEBOOK_URL": "https://www.facebook.com/askbhunte",
+    "NEXT_PUBLIC_DISCORD_URL": "https://discord.gg/JhrWCMYPBg",
+    "NEXT_PUBLIC_TELEGRAM_URL": "https://t.me/aurora_raktim_bot",
+    "NEXT_PUBLIC_VOX_API": "https://voxflow.askbhunte.com",
+    "NEXT_PUBLIC_COMMUNITY_TOOL": "https://ct-api.askbhunte.com",
+    "NEXT_PUBLIC_AI_QUIZ": "https://quiz-api.askbhunte.com"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": false,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  }
+}

@@ -1,25 +1,26 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { URLS } from "@/constants";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.formData()
+    const body = await request.formData();
 
-    const targetUrl = body.get("targetUrl") as string
-    const defaultWebhookUrl = `${process.env.N8N_WEBHOOK_BASE_URL}${process.env.N8N_WEBHOOK_CUSTOMER_SUPPORT}`
-    const webhookUrl = targetUrl || defaultWebhookUrl
+    const targetUrl = body.get("targetUrl") as string;
+    const defaultWebhookUrl = URLS.CUSTOMER_SUPPORT;
+    const webhookUrl = targetUrl || defaultWebhookUrl;
 
     // Remove targetUrl from formData before forwarding
     if (targetUrl) {
-      body.delete("targetUrl")
+      body.delete("targetUrl");
     }
 
     // Forward the request to n8n webhook
     const response = await fetch(webhookUrl, {
       method: "POST",
       body: body,
-    })
+    });
 
-    const responseText = await response.text()
+    const responseText = await response.text();
 
     // Return the response with proper CORS headers
     return new NextResponse(responseText, {
@@ -30,10 +31,13 @@ export async function POST(request: NextRequest) {
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
-    })
+    });
   } catch (error) {
-    console.error("Webhook proxy error:", error)
-    return NextResponse.json({ error: "Failed to forward request" }, { status: 500 })
+    console.error("Webhook proxy error:", error);
+    return NextResponse.json(
+      { error: "Failed to forward request" },
+      { status: 500 }
+    );
   }
 }
 
@@ -45,5 +49,5 @@ export async function OPTIONS() {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     },
-  })
+  });
 }

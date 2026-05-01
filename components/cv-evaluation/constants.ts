@@ -1,0 +1,75 @@
+export const JOB_POSITIONS = [
+  {
+    id: "ai-ml-engineer",
+    title: "Mid-Level AI/ML Engineer",
+    requirements: [
+      "Bachelor's or Master's degree in Computer Science, Data Science, Mathematics, or a related field.",
+      "3–5 years of professional experience in AI/ML or data science.",
+      "Strong proficiency in Python (NumPy, Pandas, Scikit-learn, PyTorch, TensorFlow, etc.).",
+      "Experience with data preprocessing, feature engineering, and model deployment.",
+      "Knowledge of classical ML algorithms (regression, clustering, tree-based methods, etc.) and deep learning.",
+      "Hands-on experience with cloud platforms (AWS, GCP, or Azure).",
+      "Familiarity with MLOps tools (MLflow, Kubeflow, Docker, Kubernetes, etc.).",
+      "Solid understanding of software engineering practices (version control, testing, CI/CD).",
+      "Strong problem-solving skills and the ability to work independently.",
+    ],
+  },
+  {
+    id: "fullstack-developer",
+    title: "Full-Stack Developer",
+    requirements: [
+      "Bachelor's degree in Computer Science or related field.",
+      "3+ years of experience in full-stack web development.",
+      "Proficiency in React, Node.js, and modern JavaScript/TypeScript.",
+      "Experience with REST APIs and database design (SQL and NoSQL).",
+      "Knowledge of cloud platforms (AWS, GCP, or Azure).",
+      "Familiarity with CI/CD pipelines and DevOps practices.",
+      "Strong understanding of web security and performance optimization.",
+      "Excellent problem-solving and communication skills.",
+    ],
+  },
+  {
+    id: "frontend-developer",
+    title: "Frontend Developer",
+    requirements: [
+      "Bachelor's degree in Computer Science or related field.",
+      "2+ years of experience in frontend development.",
+      "Expert knowledge of React, Next.js, and modern CSS frameworks.",
+      "Strong proficiency in TypeScript and JavaScript.",
+      "Experience with state management (Redux, Zustand, or similar).",
+      "Understanding of responsive design and accessibility standards.",
+      "Familiarity with testing frameworks (Jest, React Testing Library).",
+      "Portfolio demonstrating UI/UX design skills.",
+    ],
+  },
+  {
+    id: "backend-developer",
+    title: "Backend Developer",
+    requirements: [
+      "Bachelor's degree in Computer Science or related field.",
+      "3+ years of experience in backend development.",
+      "Strong proficiency in Node.js, Python, or Java.",
+      "Experience with database design and optimization (PostgreSQL, MongoDB).",
+      "Knowledge of microservices architecture and RESTful APIs.",
+      "Familiarity with message queues (RabbitMQ, Kafka) and caching (Redis).",
+      "Understanding of security best practices and authentication systems.",
+      "Experience with Docker and container orchestration.",
+    ],
+  },
+  {
+    id: "devops-engineer",
+    title: "DevOps Engineer",
+    requirements: [
+      "Bachelor's degree in Computer Science or related field.",
+      "3+ years of experience in DevOps or Site Reliability Engineering.",
+      "Strong knowledge of AWS, GCP, or Azure cloud platforms.",
+      "Experience with Infrastructure as Code (Terraform, CloudFormation).",
+      "Proficiency in containerization (Docker) and orchestration (Kubernetes).",
+      "Expertise in CI/CD pipelines (Jenkins, GitLab CI, GitHub Actions).",
+      "Understanding of monitoring and logging tools (Prometheus, Grafana, ELK).",
+      "Strong scripting skills (Bash, Python, or similar).",
+    ],
+  },
+];
+
+export const JOB_REQUIREMENTS = JOB_POSITIONS[0];

@@ -1,4 +1,4 @@
-import { ClaimsPortal } from "@/components/claims-portal";
+import { ClaimsPortal } from "@/components/invoice-validation";
 import { Zap,ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
