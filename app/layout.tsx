@@ -1,7 +1,9 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { Toaster } from "@/components/ui/toaster"
+import { Providers } from "./providers"
 import "./globals.css"
 
 const geist = Geist({ subsets: ["latin"] })
@@ -13,6 +15,11 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,8 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/images/favicon.png" />
+      </head>
       <body className={`${geist.className} antialiased`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
+        <Toaster />
         <Analytics />
       </body>
     </html>
